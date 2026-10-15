@@ -5,5 +5,8 @@ import (
 )
 
 func main() {
-	fmt.Print("$ ")
+	var command string
+	fmt.Println("$ ")
+	fmt.Scan(&command)
+	fmt.Printf("%s: command not found/n", command)
 }
