@@ -13,6 +13,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to read string")
 	} else {
-		fmt.Printf("%s: command not found/n", command)
+		fmt.Print(command[:len(command)-1] + ": command not found")
 	}
 }
