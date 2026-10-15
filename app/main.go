@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	fmt.Println("$ ")
+	fmt.Print("$ ")
 	command, err := bufio.NewReader(os.Stdin).ReadString('\n')
 	if err != nil {
 		fmt.Printf("%s: command not found/n", command)
