@@ -1,12 +1,18 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
 )
 
 func main() {
-	var command string
 	fmt.Println("$ ")
-	fmt.Scan(&command)
-	fmt.Printf("%s: command not found/n", command)
+	command, err := bufio.NewReader(os.Stdin).ReadString('\n')
+	if err != nil {
+		fmt.Printf("%s: command not found/n", command)
+	} else {
+		log.Fatalf("failed to read string")
+	}
 }
