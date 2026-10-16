@@ -7,9 +7,11 @@ import (
 	"os"
 )
 
+const prompt = "$"
+
 func main() {
 	for {
-		fmt.Print("$ ")
+		fmt.Print(prompt + " ")
 		command, err := bufio.NewReader(os.Stdin).ReadString('\n')
 		if err != nil {
 			log.Fatalf("failed to read string")
