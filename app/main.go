@@ -16,6 +16,9 @@ func main() {
 		if err != nil {
 			log.Fatalf("failed to read string")
 		} else {
+			if command[:len(command)-1] == "exit" {
+				os.Exit(0)
+			}
 			fmt.Print(command[:len(command)-1] + ": command not found\n")
 		}
 	}
