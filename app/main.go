@@ -12,6 +12,8 @@ const prompt = "$"
 
 func main() {
 	reader := bufio.NewReader(os.Stdin)
+	commands := getCommands()
+	cfg := Config{Commands: commands}
 	for {
 		fmt.Print(prompt + " ")
 
@@ -23,16 +25,12 @@ func main() {
 			if len(args) == 0 {
 				return
 			}
-			command := args[0]
-			switch command {
-			case "exit":
-				os.Exit(0)
-			case "echo":
-				fmt.Println(strings.Join(args[1:], " "))
-			case "type":
-				fmt.Println(typeString(args[1]))
-			default:
-				fmt.Println(command + ": command not found")
+			firstWord := args[0]
+			command, ok := commands[firstWord]
+			if !ok {
+				fmt.Println(firstWord + ": command not found")
+			} else {
+				command.Callback(&cfg, args[1:])
 			}
 		}
 	}
