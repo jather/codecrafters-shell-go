@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -10,7 +11,6 @@ type CallbackFunc func(cfg *Config, input []string) error
 
 type Command struct {
 	Name     string
-	Type     string
 	Callback CallbackFunc
 }
 type Config struct {
@@ -21,19 +21,16 @@ func getCommands() map[string]Command {
 	commandList := map[string]Command{
 		"type": {
 			Name:     "type",
-			Type:     "builtin",
 			Callback: commandType,
 		},
 
 		"exit": {
 			Name:     "exit",
-			Type:     "builtin",
 			Callback: commandExit,
 		},
 
 		"echo": {
 			Name:     "echo",
-			Type:     "builtin",
 			Callback: commandEcho,
 		},
 	}
@@ -52,13 +49,16 @@ func commandEcho(cfg *Config, input []string) error {
 func commandType(cfg *Config, input []string) error {
 	if len(input) < 1 {
 		fmt.Println(": not found")
+		return nil
 	}
 	first := input[0]
-	command, ok := cfg.Commands[first]
-	if !ok {
-		fmt.Println(first + ": not found")
+	_, found := cfg.Commands[first]
+	if found {
+		fmt.Println(first + " is a shell builtin")
+	} else if path, err := exec.LookPath(first); err == nil {
+		fmt.Println(first + " is " + path)
 	} else {
-		fmt.Println(first + " is a shell " + command.Type)
+		fmt.Println(first + ": not found")
 	}
 	return nil
 }

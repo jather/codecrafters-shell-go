@@ -23,10 +23,10 @@ func main() {
 		} else {
 			args := strings.Fields(input)
 			if len(args) == 0 {
-				return
+				continue
 			}
 			firstWord := args[0]
-			command, ok := commands[firstWord]
+			command, ok := cfg.Commands[firstWord]
 			if !ok {
 				fmt.Println(firstWord + ": command not found")
 			} else {
