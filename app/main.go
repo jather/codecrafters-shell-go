@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"log"
 	"os"
@@ -29,17 +30,20 @@ func main() {
 			firstWord := args[0]
 			command, ok := cfg.Commands[firstWord]
 			if !ok {
-				path, err := exec.LookPath(firstWord)
-				if err != nil {
+				cmd := exec.Command(firstWord, args[1:]...)
+				cmd.Stdin = os.Stdin
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				err = cmd.Run()
+				var exitErr *exec.ExitError
+				switch {
+				case err == nil:
+				case errors.Is(err, exec.ErrNotFound):
 					fmt.Println(firstWord + ": command not found")
-				} else {
-					cmd := exec.Command(path, args...)
-					cmd.Stdin = os.Stdin
-					cmd.Stdout = os.Stdout
-					cmd.Stderr = os.Stderr
-					if err = cmd.Run(); err != nil {
-						fmt.Println(err.Error())
-					}
+				case errors.As(err, &exitErr):
+					//executable exited with failure
+				default:
+					fmt.Fprintln(os.Stderr, err)
 				}
 			} else {
 				command.Callback(&cfg, args[1:])
