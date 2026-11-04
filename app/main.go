@@ -33,7 +33,7 @@ func main() {
 				if err != nil {
 					fmt.Println(firstWord + ": command not found")
 				} else {
-					cmd := exec.Command(path, strings.Join(args[1:], ""))
+					cmd := exec.Command(path, strings.Join(args, " "))
 					cmd.Stdin = os.Stdin
 					cmd.Stdout = os.Stdout
 					cmd.Stderr = os.Stderr
