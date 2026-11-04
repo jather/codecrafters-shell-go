@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -28,7 +29,15 @@ func main() {
 			firstWord := args[0]
 			command, ok := cfg.Commands[firstWord]
 			if !ok {
-				fmt.Println(firstWord + ": command not found")
+				path, err := exec.LookPath(firstWord)
+				if err != nil {
+					fmt.Println(firstWord + ": command not found")
+				} else {
+					cmd := exec.Command(path, strings.Join(args[1:], ""))
+					if err = cmd.Run(); err != nil {
+						fmt.Println(err.Error())
+					}
+				}
 			} else {
 				command.Callback(&cfg, args[1:])
 			}
